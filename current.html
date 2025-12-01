@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyCast Pro | Current Weather</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+</head>
+<body onload="loadCurrentWeather()">
+
+<header>
+  <a href="index.html"><h1>SkyCast Pro</h1></a>
+</header>
+
+<main>
+    <div class="weather-card current-day">
+        <h2 id="cityName">Loading...</h2>
+        
+        <p id="dateTime" style="margin-top:-10px; margin-bottom:20px; font-size:1.1rem; opacity:0.9; font-weight:500;">--</p>
+        
+        <div id="currentWeather">
+            <p>Fetching weather...</p>
+        </div>
+
+        <button id="forecastBtn" style="display:none; margin-top: 25px;">View 5-Day Forecast</button>
+    </div>
+</main>
+
+<script>
+// 1. YOUR API KEY
+const API_KEY = "f81e6045283b0445c6903889dbe873ad"; 
+
+function getCityFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("city");
+}
+
+// ---------------------------------------------------------
+// ⚡ LUXON TIME CALCULATION
+// ---------------------------------------------------------
+function getLuxonTime(timezoneOffsetInSeconds) {
+    const DateTime = luxon.DateTime;
+    // Get current time in UTC, add city offset, format string
+    return DateTime.now().toUTC()
+        .plus({ seconds: timezoneOffsetInSeconds }) 
+        .toFormat("cccc, MMM dd | h:mm a"); 
+}
+
+// ---------------------------------------------------------
+// LOAD CURRENT WEATHER
+// ---------------------------------------------------------
+async function loadCurrentWeather() {
+  const city = getCityFromUrl();
+  const cityNameEl = document.getElementById("cityName");
+  const dateTimeEl = document.getElementById("dateTime"); 
+  const currentWeatherEl = document.getElementById("currentWeather");
+  const forecastBtn = document.getElementById("forecastBtn");
+  
+  if (city) {
+      cityNameEl.innerText = city.toUpperCase();
+  } else {
+      cityNameEl.innerText = "City not selected";
+      currentWeatherEl.innerHTML = "<p><a href='index.html' style='color:white;'>Go Back</a></p>";
+      return;
+  }
+
+  currentWeatherEl.innerHTML = "Fetching weather...";
+
+  try {
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+    );
+    
+    if (!res.ok) throw new Error("City not found");
+    const data = await res.json();
+
+    // 1. SET TIME (Perfect Accuracy)
+    dateTimeEl.innerText = getLuxonTime(data.timezone);
+
+    // 2. SET ICON (With Backup)
+    const iconCode = data.weather[0].icon;
+    const iconUrl4x = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
+    const iconUrl2x = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+    currentWeatherEl.innerHTML = `
+        <img src="${iconUrl4x}" 
+             alt="${data.weather[0].description}" 
+             style="width:120px; height:120px; display:block; margin:0 auto;"
+             onerror="this.onerror=null; this.src='${iconUrl2x}';"> 
+             
+        <div class="large-temp">${Math.round(data.main.temp)}&deg;C</div>
+        <p class="condition-text">${data.weather[0].description}</p>
+    `;
+
+    forecastBtn.style.display = 'inline-block';
+    forecastBtn.onclick = () => {
+        window.location.href = `forecast.html?city=${encodeURIComponent(city)}`;
+    };
+
+  } catch (error) {
+    console.error(error);
+    currentWeatherEl.innerHTML = `<p style="color: #ffcccc;">Error: ${error.message}</p>`;
+    dateTimeEl.innerText = "--";
+    forecastBtn.style.display = 'none';
+  }
+}
+</script>
+
+</body>
+</html>

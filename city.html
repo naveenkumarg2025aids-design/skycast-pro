@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCast – Choose City</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container center">
+    <h1>🌤️ SkyCast</h1>
+    <p>Enter a city to start</p>
+
+    <input type="text" id="cityInput" placeholder="London, New York, Tokyo, Sydney">
+    <button onclick="goToCurrent()">Continue</button>
+
+    <p id="error" class="error hidden"></p>
+</div>
+
+<script src="data.js"></script>
+<script>
+function goToCurrent() {
+    let city = document.getElementById('cityInput').value.trim();
+
+    if (!city) {
+        showError("Please enter a city name");
+        return;
+    }
+
+    let found = Object.keys(weatherData)
+        .find(c => c.toLowerCase() === city.toLowerCase());
+
+    if (!found) {
+        showError("City not found");
+        return;
+    }
+
+    // Save city name temporarily
+    localStorage.setItem("selectedCity", found);
+
+    window.location.href = "current.html";
+}
+
+function showError(msg) {
+    const el = document.getElementById("error");
+    el.textContent = msg;
+    el.classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>

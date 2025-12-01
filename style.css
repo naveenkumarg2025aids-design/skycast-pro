@@ -1,0 +1,201 @@
+/* style.css */
+
+/* === GLOBAL STYLES & FONT === */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    
+    /* === AUTOMATIC ANIMATED BACKGROUND === */
+    /* Deep, rich gradient moving from Blue -> Purple -> Teal -> Black */
+    background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #240b36, #1c1c1c);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite; /* Auto-change every 15 seconds */
+    
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Background Animation Keyframes */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* === GLOWING FLOATING ORBS (The Glass Effect) === */
+body::before, body::after {
+    content: '';
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    z-index: -1; 
+    filter: blur(90px); /* Soft glow */
+    opacity: 0.5;
+    animation: floatOrb 12s ease-in-out infinite alternate;
+}
+
+/* Orb 1: Magenta/Purple */
+body::before {
+    background: #ff00cc;
+    top: -50px;
+    left: -50px;
+}
+
+/* Orb 2: Electric Blue */
+body::after {
+    background: #00ffff;
+    bottom: -50px;
+    right: -50px;
+    animation-delay: -6s;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(40px, 60px); }
+}
+
+/* === HEADER === */
+header {
+    padding: 30px 0;
+    width: 100%;
+    z-index: 2;
+}
+
+header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+header a {
+    color: inherit;
+    text-decoration: none;
+}
+
+main {
+    width: 100%;
+    max-width: 950px;
+    z-index: 2;
+}
+
+/* === GLASS CARDS (Frosted Glass) === */
+.weather-card {
+    /* Translucent white */
+    background: rgba(255, 255, 255, 0.1); 
+    /* The Blur makes it look like glass */
+    backdrop-filter: blur(16px); 
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    /* Soft shadow + bright border */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px auto;
+    padding: 30px;
+    text-align: center; /* Ensures all text is centered */
+}
+
+.city-input-card {
+    max-width: 450px;
+}
+
+/* === INPUTS & BUTTONS === */
+#cityInput {
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    width: 80%;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #333;
+    text-align: center;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+button {
+    padding: 12px 30px;
+    border-radius: 12px;
+    border: none;
+    /* Gradient Button */
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+}
+
+/* === TYPOGRAPHY & LAYOUT === */
+.current-day h2 {
+    font-size: 2.2rem;
+    margin: 0 0 15px 0;
+}
+
+.large-temp {
+    font-size: 5rem;
+    font-weight: 800;
+    margin: 15px 0;
+    text-shadow: 2px 2px 15px rgba(0,0,0,0.2);
+}
+
+.condition-text {
+    font-size: 1.4rem;
+    text-transform: capitalize;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+/* === FORECAST GRID === */
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+    justify-content: center;
+}
+
+.forecast-card {
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05); /* Slightly different tint for sub-cards */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.forecast-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-8px);
+}
+
+.forecast-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+}
+
+.forecast-card .temp {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 10px 0;
+}

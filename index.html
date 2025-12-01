@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyCast Pro | Enter City</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html"><h1>SkyCast Pro</h1></a> 
+  <p style="opacity: 0.8; margin-top:5px;">Check the weather instantly</p>
+</header>
+
+<main>
+    <div class="weather-card city-input-card">
+      <h2>Enter a City</h2>
+      <input type="text" id="cityInput" placeholder="e.g. London, Mumbai, Tokyo">
+      <br>
+      <button onclick="redirectToCurrent()">Check Weather</button>
+    </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+function redirectToCurrent() {
+  const city = document.getElementById("cityInput").value.trim();
+  if (city === "") {
+    alert("Please enter a city");
+    return;
+  }
+  window.location.href = "current.html?city=" + encodeURIComponent(city);
+}
+</script>
+
+</body>
+</html>
